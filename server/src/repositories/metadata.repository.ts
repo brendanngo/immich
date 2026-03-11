@@ -72,6 +72,9 @@ export interface ImmichTags extends Omit<Tags, TagsWithWrongTypes> {
 
   AndroidMake?: string;
   AndroidModel?: string;
+  DeviceManufacturer?: string;
+  DeviceModelName?: string;
+  AcquisitionRecordGroupItemValue?: string;
 }
 
 @Injectable()

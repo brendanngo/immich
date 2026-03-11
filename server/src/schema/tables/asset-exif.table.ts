@@ -110,6 +110,9 @@ export class AssetExifTable {
   @Column({ type: 'character varying', array: true, nullable: true })
   tags!: string[] | null;
 
+  @Column({ type: 'boolean', nullable: true })
+  isSlog3!: boolean | null;
+
   @UpdateDateColumn({ default: () => 'clock_timestamp()' })
   updatedAt!: Generated<Date>;
 

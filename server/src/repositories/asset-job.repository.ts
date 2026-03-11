@@ -321,6 +321,8 @@ export class AssetJobRepository {
     return this.db
       .selectFrom('asset')
       .select(['asset.id', 'asset.ownerId', 'asset.originalPath', 'asset.encodedVideoPath'])
+      .leftJoin('asset_exif', 'asset.id', 'asset_exif.assetId')
+      .select('asset_exif.isSlog3')
       .where('asset.id', '=', id)
       .where('asset.type', '=', AssetType.Video)
       .executeTakeFirst();

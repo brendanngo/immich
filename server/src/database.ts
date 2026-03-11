@@ -475,6 +475,7 @@ export const columns = {
     'asset_exif.state',
     'asset_exif.tags',
     'asset_exif.timeZone',
+    'asset_exif.isSlog3',
   ],
   plugin: [
     'plugin.id as id',

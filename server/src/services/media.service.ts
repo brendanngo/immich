@@ -617,6 +617,25 @@ export class MediaService extends BaseService {
     }
 
     const command = BaseConfig.create(ffmpeg, this.videoInterfaces).getCommand(target, videoStream, audioStream);
+    // Inject S-Log3 LUT for Sony footage shot in S-Log3 picture profile
+    if (asset.isSlog3 && [TranscodeTarget.All, TranscodeTarget.Video].includes(target)) {
+      const lutPath = '/data/config/luts/slog3.cube';
+      const lutFilter = `lut3d='${lutPath}'`;
+      const vfIndex = command.outputOptions.findIndex((o) => o.startsWith('-vf '));
+      if (vfIndex === -1) {
+        command.outputOptions.push(`-vf ${lutFilter}`);
+      } else {
+        const parts = command.outputOptions[vfIndex].slice(4).split(',');
+        const formatIndex = parts.findIndex((p) => p.startsWith('format='));
+        if (formatIndex === -1) {
+          parts.push(lutFilter);
+        } else {
+          parts.splice(formatIndex, 0, lutFilter);
+        }
+        command.outputOptions[vfIndex] = `-vf ${parts.join(',')}`;
+      }
+      this.logger.log(`Applying S-Log3 LUT to asset ${asset.id}`);
+    }
     if (ffmpeg.accel === TranscodeHardwareAcceleration.Disabled) {
       this.logger.log(`Transcoding video ${asset.id} without hardware acceleration`);
     } else {

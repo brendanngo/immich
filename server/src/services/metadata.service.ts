@@ -308,6 +308,11 @@ export class MetadataService extends BaseService {
       autoStackId: this.getAutoStackId(exifTags),
 
       tags: tags.length > 0 ? tags : null,
+
+      // Sony S-Log3: detected via non-standard rtmd track tag, not visible to FFprobe
+      isSlog3: typeof (exifTags as any).AcquisitionRecordGroupItemValue === 'string'
+        ? (exifTags as any).AcquisitionRecordGroupItemValue.toLowerCase().includes('slog3')
+        : null,
     };
 
     const isSidewards = exifTags.Orientation && this.isOrientationSidewards(exifTags.Orientation);
